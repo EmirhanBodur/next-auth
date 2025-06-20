@@ -13,7 +13,34 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   pages: {
-    signIn: "/",
+    signIn: "/", // kullanıcı login değilse buraya yönlenir
   },
   secret: process.env.NEXTAUTH_SECRET,
+
+  callbacks: {
+    async jwt({ token, account, idToken }) {
+      console.log("🔥 jwt callback çalıştı");
+
+      // Kullanıcı giriş yapıyorsa ve ID Token geldiyse
+      if (account && idToken) {
+        console.log("🟡 Gelen ID Token:", idToken);
+
+        const roleFromToken =
+          idToken["https://dev-i7a43o5ks6izwvjh.us.auth0.com/role"];
+
+        console.log("🔵 Gelen ROLE:", roleFromToken);
+
+        token.role = roleFromToken || "user";
+      }
+
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user && token?.role) {
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
 };
