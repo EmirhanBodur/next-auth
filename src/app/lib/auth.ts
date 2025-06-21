@@ -1,5 +1,6 @@
 import Auth0Provider from "next-auth/providers/auth0";
-import type { NextAuthOptions } from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import { jwt_decode } from "jwt-decode";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -7,39 +8,42 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.AUTH0_CLIENT_ID!,
       clientSecret: process.env.AUTH0_CLIENT_SECRET!,
       issuer: process.env.AUTH0_ISSUER,
+      authorization: {
+        params: {
+          scope: "openid profile email",
+          audience: "https://dev-i7a43o5ks6izwvjh.us.auth0.com/api/v2/",
+          response_type: "code",
+        },
+      },
     }),
   ],
-  session: {
-    strategy: "jwt",
-  },
-  pages: {
-    signIn: "/", // kullanıcı login değilse buraya yönlenir
-  },
+  session: { strategy: "jwt" },
   secret: process.env.NEXTAUTH_SECRET,
+  pages: { signIn: "/" },
 
   callbacks: {
-    async jwt({ token, account, idToken }) {
-      console.log("🔥 jwt callback çalıştı");
+    async jwt({ token, account }) {
+  console.log("🧪 JWT CALLBACK");
 
-      // Kullanıcı giriş yapıyorsa ve ID Token geldiyse
-      if (account && idToken) {
-        console.log("🟡 Gelen ID Token:", idToken);
+  if (account?.id_token) {
+    console.log("📦 RAW ID TOKEN:", account.id_token);
 
-        const roleFromToken =
-          idToken["https://dev-i7a43o5ks6izwvjh.us.auth0.com/role"];
+    const decoded: any = jwt_decode(account.id_token);
+    console.log("📬 DECODED PAYLOAD:", decoded);
 
-        console.log("🔵 Gelen ROLE:", roleFromToken);
+    const role = decoded["https://myapp.com/roles"];
 
-        token.role = roleFromToken || "user";
-      }
+    console.log("🎯 ROLE:", role);
 
-      return token;
-    },
+    token.role = role || "user";
+  } else {
+    console.log("❌ ID Token yok");
+  }
 
+  return token;
+}
     async session({ session, token }) {
-      if (session.user && token?.role) {
-        session.user.role = token.role;
-      }
+      session.user.role = token.role ?? "user";
       return session;
     },
   },

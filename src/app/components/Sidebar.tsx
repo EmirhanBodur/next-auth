@@ -1,7 +1,6 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
-import { usePathname } from "next/navigation";
 import {
   FaHome,
   FaChartBar,
@@ -12,9 +11,12 @@ import {
 } from "react-icons/fa";
 import React from "react";
 
-export default function Sidebar(): JSX.Element {
+export default function Sidebar({
+  setSelectedTab,
+}: {
+  setSelectedTab: (tab: string) => void;
+}): JSX.Element {
   const { data: session } = useSession();
-  const pathname = usePathname();
 
   const handleLogout = () => {
     signOut({ redirect: false }).then(() => {
@@ -46,32 +48,36 @@ export default function Sidebar(): JSX.Element {
 
         {/* Navigasyon */}
         <nav className="flex flex-col gap-4 text-gray-700">
-          <NavItem href="/dashboard" icon={<FaHome />} label="Dashboard" />
           <NavItem
-            href="/dashboard/revenue"
+            icon={<FaHome />}
+            label="Dashboard"
+            onClick={() => setSelectedTab("dashboard")}
+          />
+          <NavItem
             icon={<FaChartBar />}
             label="Revenue"
+            onClick={() => setSelectedTab("revenue")}
           />
           <NavItem
-            href="/dashboard/notifications"
             icon={<FaBell />}
             label="Notifications"
+            onClick={() => setSelectedTab("notifications")}
           />
           <NavItem
-            href="/dashboard/analytics"
             icon={<FaChartPie />}
             label="Analytics"
+            onClick={() => setSelectedTab("analytics")}
           />
           <NavItem
-            href="/dashboard/inventory"
             icon={<FaBoxOpen />}
-            label="Inventory"
+            label="Kullanıcılar"
+            onClick={() => setSelectedTab("users")}
           />
 
           {/* Çıkış */}
           <button
             onClick={handleLogout}
-            className="mt-4 flex items-center gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l  cursor-pointer"
+            className="mt-4 flex items-center gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l cursor-pointer"
           >
             <FaSignOutAlt />
             <span>Logout</span>
@@ -82,28 +88,22 @@ export default function Sidebar(): JSX.Element {
   );
 }
 
-// NavItem bileşeni Sidebar içinde tanımlı
 function NavItem({
-  href,
   icon,
   label,
+  onClick,
 }: {
-  href: string;
   icon: React.ReactNode;
   label: string;
+  onClick?: () => void;
 }): JSX.Element {
-  const pathname = usePathname();
-  const isActive = pathname === href;
-
   return (
-    <a
-      href={href}
-      className={`flex items-center gap-3 px-2 py-2 rounded-lg transition ${
-        isActive ? "bg-blue-100 text-blue-700" : "hover:bg-gray-100"
-      }`}
+    <button
+      onClick={onClick}
+      className="flex items-center gap-3 px-2 py-2 rounded-lg transition hover:bg-gray-100 text-sm w-full text-left"
     >
       {icon}
-      <span className="text-sm">{label}</span>
-    </a>
+      <span>{label}</span>
+    </button>
   );
 }

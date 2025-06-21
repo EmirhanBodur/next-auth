@@ -8,32 +8,25 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-[#f9fafb] px-4">
-      <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl text-center">
-        <div className="text-4xl mb-4">🔐</div>
+    <main className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-xl shadow-md text-center space-y-4">
+        <h2 className="text-xl font-semibold text-gray-800">Giriş Türü Seç</h2>
 
-        <h1 className="text-xl font-semibold text-gray-900 mb-1">Hoş Geldin</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          Devam etmek için giriş türünü seç.
-        </p>
+        <button
+          onClick={() => handleSignIn("admin")}
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full"
+        >
+          Admin Giriş
+        </button>
 
-        <div className="flex flex-col gap-4">
-          <button
-            onClick={() => handleSignIn("user")}
-            className="w-full py-2 px-4 border-2 border-gray-300 text-gray-800 rounded-md hover:bg-gray-100 transition font-medium cursor-pointer"
-          >
-            Kullanıcı Girişi
-          </button>
+        <button
+          onClick={() => handleSignIn("user")}
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 w-full"
+        >
+          User Giriş
+        </button>
 
-          <button
-            onClick={() => handleSignIn("admin")}
-            className="w-full py-2 px-4 border-2 border-gray-300 text-gray-800 rounded-md hover:bg-gray-100 transition font-medium cursor-pointer"
-          >
-            Admin Girişi
-          </button>
-        </div>
-
-        <p className="text-m text-gray-400 mt-8">© 2025 Emirhan Bodur</p>
+        <p className="text-sm text-gray-400 mt-6">© 2025 Emirhan Bodur</p>
       </div>
     </main>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import Sidebar from "@/app/components/Sidebar";
+import Page from "./page";
 
 export default function DashboardLayout({
   children,
@@ -10,10 +10,7 @@ export default function DashboardLayout({
 }) {
   return (
     <SessionProvider>
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 min-h-screen bg-gray-50">{children}</main>
-      </div>
+      <Page>{children}</Page>
     </SessionProvider>
   );
 }

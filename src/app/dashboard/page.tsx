@@ -1,34 +1,58 @@
 "use client";
 
 import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
+import Sidebar from "@/app/components/Sidebar";
+import UsersPage from "../components/UsersPage";
 
-export default function DashboardPage() {
-  const { data: session, status } = useSession();
+export default function DashboardShell() {
+  const [selectedTab, setSelectedTab] = useState("dashboard");
+  const { data: session } = useSession();
 
-  if (status === "loading") {
-    return <p className="p-8 text-gray-600">Yükleniyor...</p>;
-  }
+  useEffect(() => {
+    console.log("🧾 SESSION:", session);
+  }, [session]);
+
+  const renderContent = () => {
+    if (!session) return <div>Yükleniyor...</div>;
+
+    switch (selectedTab) {
+      case "users":
+        if (session.user.role !== "admin") {
+          return (
+            <div className="text-red-500">Erişim reddedildi (admin değil)</div>
+          );
+        }
+        return <UsersPage />;
+      case "analytics":
+        return <div>Analytics İçeriği</div>;
+      case "notifications":
+        return <div>Notifications İçeriği</div>;
+      case "revenue":
+        return <div>Revenue İçeriği</div>;
+      default:
+        return (
+          <div>
+            <h1 className="text-2xl font-bold mb-2">
+              Hoş geldin {session.user.name}
+            </h1>
+            <p className="text-lg">
+              Rolün:{" "}
+              <span className="font-semibold text-blue-600">
+                {session.user.role ?? "belirlenemedi"}
+              </span>
+            </p>
+          </div>
+        );
+    }
+  };
 
   return (
-    <main className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-2xl font-semibold text-gray-800 mb-4">
-        Hoş geldin Dashboard'a
-      </h1>
-
-      {session?.user && (
-        <div className="text-lg text-gray-700">
-          <p>
-            Giriş yapan:{" "}
-            <strong>{session.user.name || session.user.email}</strong>
-          </p>
-          <p>
-            Rol:{" "}
-            <span className="font-semibold text-blue-600">
-              {session.user.role}
-            </span>
-          </p>
-        </div>
-      )}
-    </main>
+    <div className="flex">
+      <Sidebar setSelectedTab={setSelectedTab} />
+      <main className="flex-1 min-h-screen bg-gray-50 p-6">
+        {renderContent()}
+      </main>
+    </div>
   );
 }
