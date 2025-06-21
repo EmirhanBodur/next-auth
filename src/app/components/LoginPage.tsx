@@ -1,46 +1,40 @@
 "use client";
 
 import { signIn } from "next-auth/react";
-import { FaLock } from "react-icons/fa";
-
-console.log("✅ LoginPage YÜKLENDİ");
 
 export default function LoginPage() {
   const handleSignIn = (role: "admin" | "user") => {
-    console.log("🔥 Butona Basıldı:", role);
-
-    signIn(
-      "auth0",
-      { callbackUrl: "/dashboard" }, // ① options
-      { role } // ② authorizationParams: URL query param
-    );
+    signIn("auth0", { callbackUrl: "/dashboard" }, { role });
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <section className="w-full max-w-sm bg-white rounded-xl shadow-md p-8">
-        <div className="flex flex-col items-center">
-          <FaLock className="text-white bg-blue-600 rounded-full p-3 mb-4" />
-          <h1 className="text-2xl font-semibold mb-2">Giriş Yap</h1>
-          <p className="text-gray-600 text-sm mb-6 text-center">
-            Giriş tipini seç:
-          </p>
+    <main className="min-h-screen flex items-center justify-center bg-[#f9fafb] px-4">
+      <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl text-center">
+        <div className="text-4xl mb-4">🔐</div>
 
+        <h1 className="text-xl font-semibold text-gray-900 mb-1">Hoş Geldin</h1>
+        <p className="text-sm text-gray-500 mb-8">
+          Devam etmek için giriş türünü seç.
+        </p>
+
+        <div className="flex flex-col gap-4">
           <button
             onClick={() => handleSignIn("user")}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg mb-3"
+            className="w-full py-2 px-4 border-2 border-gray-300 text-gray-800 rounded-md hover:bg-gray-100 transition font-medium cursor-pointer"
           >
-            User Giriş
+            Kullanıcı Girişi
           </button>
 
           <button
             onClick={() => handleSignIn("admin")}
-            className="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg"
+            className="w-full py-2 px-4 border-2 border-gray-300 text-gray-800 rounded-md hover:bg-gray-100 transition font-medium cursor-pointer"
           >
-            Admin Giriş
+            Admin Girişi
           </button>
         </div>
-      </section>
+
+        <p className="text-m text-gray-400 mt-8">© 2025 Emirhan Bodur</p>
+      </div>
     </main>
   );
 }
