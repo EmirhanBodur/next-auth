@@ -29,16 +29,16 @@ export default function Sidebar({
   };
 
   return (
-    <aside className="w-64 h-screen bg-white border-r p-6 flex flex-col justify-between shadow-sm">
+    <aside className="w-20 md:w-64 h-screen bg-white border-r p-4 md:p-6 flex flex-col justify-between shadow-sm">
       <div>
         {/* Kullanıcı Bilgisi */}
         <div className="flex items-center gap-3 mb-6">
           <img
             src={session?.user?.image ?? "/default-avatar.png"}
             alt="avatar"
-            className="w-12 h-12 rounded-full ring-2 ring-blue-500"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full ring-2 ring-blue-500 mx-auto md:mx-0"
           />
-          <div>
+          <div className="hidden md:block">
             <h2 className="font-bold text-gray-900 text-sm">
               {session?.user?.name}
             </h2>
@@ -77,10 +77,10 @@ export default function Sidebar({
           {/* Çıkış */}
           <button
             onClick={handleLogout}
-            className="mt-4 flex items-center gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l cursor-pointer"
+            className="mt-4 flex items-center justify-center md:justify-start gap-0 md:gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l"
           >
             <FaSignOutAlt />
-            <span>Logout</span>
+            <span className="hidden md:inline">Logout</span>
           </button>
         </nav>
       </div>
@@ -100,10 +100,10 @@ function NavItem({
   return (
     <button
       onClick={onClick}
-      className="flex items-center gap-3 px-2 py-2 rounded-lg transition hover:bg-gray-100 text-sm w-full text-left"
+      className="flex items-center justify-center md:justify-start gap-0 md:gap-3 px-2 py-2 rounded-lg transition hover:bg-gray-100 text-sm w-full text-left"
     >
       {icon}
-      <span>{label}</span>
+      <span className="hidden md:inline">{label}</span>
     </button>
   );
 }
