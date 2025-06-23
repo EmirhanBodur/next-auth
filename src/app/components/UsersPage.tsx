@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import {
   FaEnvelope,
   FaClock,
@@ -22,16 +23,29 @@ interface Auth0User {
 }
 
 export default function UsersPage() {
-  const { data: session } = useSession();
-  const role = session?.user?.role;
+  const { data: session, status } = useSession();
   const [users, setUsers] = useState<Auth0User[]>([]);
   const [error, setError] = useState<string>("");
   const [expandedUserId, setExpandedUserId] = useState<string | null>(null);
 
+  // Yetki kontrolü ve yönlendirme
   useEffect(() => {
-    if (role === "admin") {
+    if (status === "unauthenticated") {
+      redirect("/auth/error");
+    } else if (status === "authenticated" && session.user?.role !== "admin") {
+      redirect("/unauthorized");
+    }
+  }, [status, session]);
+
+  useEffect(() => {
+    if (status === "authenticated" && session.user?.role === "admin") {
       fetch("/api/users")
-        .then((res) => res.json())
+        .then((res) => {
+          if (res.status === 403) {
+            redirect("/unauthorized");
+          }
+          return res.json();
+        })
         .then((data) => {
           if (Array.isArray(data)) {
             setUsers(data);
@@ -41,14 +55,12 @@ export default function UsersPage() {
         })
         .catch(() => setError("Kullanıcılar getirilemedi"));
     }
-  }, [role]);
+  }, [status, session]);
 
-  if (role !== "admin") {
+  if (status === "loading") {
     return (
-      <div className="p-4">
-        <p className="text-lg text-red-600">
-          Bu içeriği görmeye yetkiniz yoktur.
-        </p>
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
       </div>
     );
   }
@@ -77,7 +89,7 @@ export default function UsersPage() {
               key={user.user_id}
               className="px-4 py-3 text-sm border-b md:border-none"
             >
-              {/* Mobil */}
+              {/* Mobil görünüm */}
               <div className="md:hidden flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <img
@@ -96,7 +108,6 @@ export default function UsersPage() {
                 </button>
               </div>
 
-              {/* Mobil Detaylar */}
               {isExpanded && (
                 <div className="md:hidden mt-3 pl-1 space-y-2 text-gray-700">
                   <div className="flex items-center gap-2">
@@ -123,7 +134,7 @@ export default function UsersPage() {
                 </div>
               )}
 
-              {/* Masaüstü */}
+              {/* Masaüstü görünüm */}
               <div className="hidden md:grid md:grid-cols-6 gap-4 items-center">
                 <div className="flex items-center space-x-2">
                   <img

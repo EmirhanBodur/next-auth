@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import {
   FaHome,
   FaChartBar,
@@ -15,17 +16,22 @@ export default function Sidebar({
   setSelectedTab,
 }: {
   setSelectedTab: (tab: string) => void;
-}): JSX.Element {
+}) {
   const { data: session } = useSession();
+  const router = useRouter();
 
   const handleLogout = () => {
     signOut({ redirect: false }).then(() => {
       const domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN!;
       const clientId = process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!;
       const returnTo = window.location.origin;
-
       window.location.href = `https://${domain}/v2/logout?client_id=${clientId}&returnTo=${returnTo}`;
     });
+  };
+
+  const handleNavigation = (tab: string) => {
+    setSelectedTab(tab);
+    router.push(`/dashboard/${tab}`);
   };
 
   return (
@@ -51,27 +57,27 @@ export default function Sidebar({
           <NavItem
             icon={<FaHome />}
             label="Dashboard"
-            onClick={() => setSelectedTab("dashboard")}
+            onClick={() => handleNavigation("dashboard")}
           />
           <NavItem
             icon={<FaChartBar />}
             label="Revenue"
-            onClick={() => setSelectedTab("revenue")}
+            onClick={() => handleNavigation("revenue")}
           />
           <NavItem
             icon={<FaBell />}
             label="Notifications"
-            onClick={() => setSelectedTab("notifications")}
+            onClick={() => handleNavigation("notifications")}
           />
           <NavItem
             icon={<FaChartPie />}
             label="Analytics"
-            onClick={() => setSelectedTab("analytics")}
+            onClick={() => handleNavigation("analytics")}
           />
           <NavItem
             icon={<FaBoxOpen />}
             label="Kullanıcılar"
-            onClick={() => setSelectedTab("users")}
+            onClick={() => handleNavigation("users")}
           />
 
           {/* Çıkış */}
@@ -96,7 +102,7 @@ function NavItem({
   icon: React.ReactNode;
   label: string;
   onClick?: () => void;
-}): JSX.Element {
+}) {
   return (
     <button
       onClick={onClick}
