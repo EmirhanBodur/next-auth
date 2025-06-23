@@ -1,3 +1,5 @@
+# ✅ v1.0.0 - Production ready
+
 # Next.js Auth0 JWT Projesi
 
 Bu proje, Next.js (App Router) kullanılarak geliştirilmiş bir kimlik doğrulama ve yetkilendirme sistemidir. Auth0 ile OAuth 2.0 tabanlı kullanıcı girişi sağlanır ve NextAuth.js üzerinden JWT tabanlı oturum yönetimi gerçekleştirilir.
