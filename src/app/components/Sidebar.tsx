@@ -59,31 +59,22 @@ export default function Sidebar({
             label="Dashboard"
             onClick={() => handleNavigation("dashboard")}
           />
-          <NavItem
-            icon={<FaChartBar />}
-            label="Revenue"
-            onClick={() => handleNavigation("revenue")}
-          />
-          <NavItem
-            icon={<FaBell />}
-            label="Notifications"
-            onClick={() => handleNavigation("notifications")}
-          />
+
           <NavItem
             icon={<FaChartPie />}
-            label="Analytics"
-            onClick={() => handleNavigation("analytics")}
+            label="Rolü User olanlar görebilir"
+            onClick={() => handleNavigation("user")}
           />
           <NavItem
             icon={<FaBoxOpen />}
             label="Kullanıcılar"
-            onClick={() => handleNavigation("users")}
+            onClick={() => handleNavigation("admin")}
           />
 
           {/* Çıkış */}
           <button
             onClick={handleLogout}
-            className="mt-4 flex items-center justify-center md:justify-start gap-0 md:gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l"
+            className="mt-4 flex items-center justify-center md:justify-start gap-0 md:gap-2 px-2 py-2 text-red-600 hover:text-red-800 text-l cursor-pointer"
           >
             <FaSignOutAlt />
             <span className="hidden md:inline">Logout</span>
@@ -106,7 +97,7 @@ function NavItem({
   return (
     <button
       onClick={onClick}
-      className="flex items-center justify-center md:justify-start gap-0 md:gap-3 px-2 py-2 rounded-lg transition hover:bg-gray-100 text-sm w-full text-left"
+      className="flex items-center justify-center md:justify-start gap-0 md:gap-3 px-2 py-2 rounded-lg transition hover:bg-gray-100 text-sm w-full text-left cursor-pointer"
     >
       {icon}
       <span className="hidden md:inline">{label}</span>

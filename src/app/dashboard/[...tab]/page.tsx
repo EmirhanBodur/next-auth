@@ -40,14 +40,19 @@ export default function DashboardShell() {
 
   const renderContent = () => {
     switch (selectedTab) {
-      case "users":
+      case "admin":
         return <UsersPage />;
-      case "analytics":
-        return <div>Analytics İçeriği</div>;
-      case "notifications":
-        return <div>Notifications İçeriği</div>;
-      case "revenue":
-        return <div>Revenue İçeriği</div>;
+      case "user":
+        if (session.user?.role === "user") {
+          return <div>Rolünüz User ise görebilirsiniz.</div>;
+        } else {
+          return (
+            <div className="text-red-500">
+              Bu içeriği görmeye yetkiniz yoktur.
+            </div>
+          );
+        }
+
       default:
         return (
           <div>
