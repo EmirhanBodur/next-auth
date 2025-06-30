@@ -2,15 +2,9 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import {
-  FaHome,
-  FaChartBar,
-  FaBell,
-  FaChartPie,
-  FaBoxOpen,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { FaHome, FaChartPie, FaBoxOpen, FaSignOutAlt } from "react-icons/fa";
 import React from "react";
+import Image from "next/image";
 
 export default function Sidebar({
   setSelectedTab,
@@ -39,11 +33,20 @@ export default function Sidebar({
       <div>
         {/* Kullanıcı Bilgisi */}
         <div className="flex items-center gap-3 mb-6">
-          <img
-            src={session?.user?.image ?? "/default-avatar.png"}
-            alt="avatar"
-            className="w-10 h-10 md:w-12 md:h-12 rounded-full ring-2 ring-blue-500 mx-auto md:mx-0"
-          />
+          {session?.user?.image ? (
+            <Image
+              src={session.user.image}
+              alt="avatar"
+              width={48}
+              height={48}
+              className="w-10 h-10 md:w-12 md:h-12 rounded-full ring-2 ring-blue-500 mx-auto md:mx-0"
+            />
+          ) : (
+            <div className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full ring-2 ring-blue-500 bg-gray-300 text-white font-bold mx-auto md:mx-0">
+              {session?.user?.name?.charAt(0).toUpperCase() ?? "?"}
+            </div>
+          )}
+
           <div className="hidden md:block">
             <h2 className="font-bold text-gray-900 text-sm">
               {session?.user?.name}

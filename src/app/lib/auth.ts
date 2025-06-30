@@ -1,6 +1,11 @@
 import Auth0Provider from "next-auth/providers/auth0";
 import { NextAuthOptions } from "next-auth";
-import { jwt_decode } from "jwt-decode";
+import jwt_decode from "jwt-decode";
+
+interface DecodedIdToken {
+  [key: string]: unknown;
+  "https://myapp.com/roles"?: string;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -23,25 +28,25 @@ export const authOptions: NextAuthOptions = {
 
   callbacks: {
     async jwt({ token, account }) {
-  console.log("🧪 JWT CALLBACK");
+      console.log("🧪 JWT CALLBACK");
 
-  if (account?.id_token) {
-    console.log("📦 RAW ID TOKEN:", account.id_token);
+      if (account?.id_token) {
+        console.log("📦 RAW ID TOKEN:", account.id_token);
 
-    const decoded: any = jwt_decode(account.id_token);
-    console.log("📬 DECODED PAYLOAD:", decoded);
+        const decoded = jwt_decode<DecodedIdToken>(account.id_token);
+        console.log("📬 DECODED PAYLOAD:", decoded);
 
-    const role = decoded["https://myapp.com/roles"];
+        const role = decoded["https://myapp.com/roles"];
 
-    console.log("🎯 ROLE:", role);
+        console.log("🎯 ROLE:", role);
 
-    token.role = role || "user";
-  } else {
-    console.log("❌ ID Token yok");
-  }
+        token.role = role || "user";
+      } else {
+        console.log("❌ ID Token yok");
+      }
 
-  return token;
-}
+      return token;
+    },
     async session({ session, token }) {
       session.user.role = token.role ?? "user";
       return session;
